@@ -1,0 +1,35 @@
+# Pinned to an exact smart-spatial-system release so results in this
+# repository stay reproducible as that project keeps developing. Bump this
+# deliberately (and re-run the affected notebooks) - never loosen it to
+# ">=" for day-to-day work.
+#
+# NOTE (2026-09-12): 0.2.0 is merged to smart_spatial_system's main branch
+# but not yet tagged/published to PyPI - PyPI still serves 0.1.0, which
+# predates the crs_transform fix this case study depends on (see
+# smart_spatial_system's CHANGELOG.md). Until the v0.2.0 tag is pushed and
+# the PyPI publish workflow runs, install directly from the tagged commit:
+#
+#   pip install "smart-spatial-system[raster,pdf] @ git+https://github.com/arazshah/smart_spatial_system.git@<commit-or-tag>"
+#
+# Switch the line below to the plain PyPI pin once v0.2.0 is published, and
+# delete this note.
+smart-spatial-system[raster,pdf]==0.2.0
+
+# Notebook environment
+jupyterlab>=4.0
+ipykernel>=6.29
+
+# Analysis
+pandas>=2.2
+numpy>=1.26
+scipy>=1.13          # spearmanr for the Rank Stability metric
+
+# Mapping / plotting
+matplotlib>=3.8
+folium>=0.16
+geopandas>=0.14
+
+# LLM arm needs nothing beyond what smart-spatial-system already pulls in
+# (its own OpenAI-compatible client) - no extra client library required.
+
+python-dotenv>=1.0
