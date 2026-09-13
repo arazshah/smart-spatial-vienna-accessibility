@@ -1,0 +1,1069 @@
+{
+  "run_index": 13,
+  "generation_success": true,
+  "execution_success": true,
+  "degenerate_ranking": true,
+  "error": null,
+  "query_spec": {
+    "raw_query": "Rank Vienna's 23 municipal districts by accessibility to metro, schools, and parks",
+    "goal": "rank_accessibility",
+    "entities": [
+      {
+        "ref": "sites",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      },
+      {
+        "ref": "metro",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      },
+      {
+        "ref": "schools",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      },
+      {
+        "ref": "parks",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      }
+    ],
+    "operations": [
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "sites"
+        },
+        "params": {},
+        "output": "sites_metric"
+      },
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "metro"
+        },
+        "params": {},
+        "output": "metro_metric"
+      },
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "schools"
+        },
+        "params": {},
+        "output": "schools_metric"
+      },
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "parks"
+        },
+        "params": {},
+        "output": "parks_metric"
+      },
+      {
+        "op": "distance_to",
+        "inputs": {
+          "vector": "sites_metric",
+          "target": "metro_metric"
+        },
+        "params": {},
+        "output": "distance_to_metro"
+      },
+      {
+        "op": "distance_to",
+        "inputs": {
+          "vector": "sites_metric",
+          "target": "schools_metric"
+        },
+        "params": {},
+        "output": "distance_to_schools"
+      },
+      {
+        "op": "distance_to",
+        "inputs": {
+          "vector": "sites_metric",
+          "target": "parks_metric"
+        },
+        "params": {},
+        "output": "distance_to_parks"
+      },
+      {
+        "op": "score_features",
+        "inputs": {
+          "vector": "sites_metric"
+        },
+        "params": {
+          "scoring_spec": {
+            "factors": [
+              {
+                "field": "enriched_distance_to_metro",
+                "weight": 1
+              },
+              {
+                "field": "enriched_distance_to_schools",
+                "weight": 1
+              },
+              {
+                "field": "enriched_distance_to_parks",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "output": "scored_sites"
+      },
+      {
+        "op": "rank_features",
+        "inputs": {
+          "vector": "scored_sites"
+        },
+        "params": {
+          "score_field": "score",
+          "rank_field": "rank"
+        },
+        "output": "ranked_sites"
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "vector",
+        "source": "ranked_sites",
+        "format": "json",
+        "config": {}
+      }
+    ],
+    "source": "llm",
+    "metadata": {
+      "language": "fa",
+      "assumptions": [],
+      "generated_by": "llm",
+      "normalization": {
+        "applied": true,
+        "repairs": [
+          "added score_field='score' to rank_features",
+          "added rank_field='rank' to rank_features",
+          "removed invalid enrich_feature_properties without rules and rewrote 'enriched_distance_to_metro' -> 'distance_to_metro'",
+          "removed invalid enrich_feature_properties without rules and rewrote 'enriched_distance_to_schools' -> 'distance_to_schools'",
+          "removed invalid enrich_feature_properties without rules and rewrote 'enriched_distance_to_parks' -> 'distance_to_parks'"
+        ]
+      }
+    }
+  },
+  "operation_sequence": [
+    "OperationSpec(op='crs_transform', inputs={'vector': 'sites'}, params={}, output='sites_metric')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'metro'}, params={}, output='metro_metric')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'schools'}, params={}, output='schools_metric')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'parks'}, params={}, output='parks_metric')",
+    "OperationSpec(op='distance_to', inputs={'vector': 'sites_metric', 'target': 'metro_metric'}, params={}, output='distance_to_metro')",
+    "OperationSpec(op='distance_to', inputs={'vector': 'sites_metric', 'target': 'schools_metric'}, params={}, output='distance_to_schools')",
+    "OperationSpec(op='distance_to', inputs={'vector': 'sites_metric', 'target': 'parks_metric'}, params={}, output='distance_to_parks')",
+    "OperationSpec(op='score_features', inputs={'vector': 'sites_metric'}, params={'scoring_spec': {'factors': [{'field': 'enriched_distance_to_metro', 'weight': 1}, {'field': 'enriched_distance_to_schools', 'weight': 1}, {'field': 'enriched_distance_to_parks', 'weight': 1}]}}, output='scored_sites')",
+    "OperationSpec(op='rank_features', inputs={'vector': 'scored_sites'}, params={'score_field': 'score', 'rank_field': 'rank'}, output='ranked_sites')"
+  ],
+  "ranking": [
+    {
+      "osm_id": 1990592,
+      "ref": 1,
+      "name": "Innere Stadt",
+      "name:de": NaN,
+      "population": 17135.0,
+      "area_km2": 2.868,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 1
+    },
+    {
+      "osm_id": 1990594,
+      "ref": 2,
+      "name": "Leopoldstadt",
+      "name:de": NaN,
+      "population": NaN,
+      "area_km2": 19.235,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 2
+    },
+    {
+      "osm_id": 1991416,
+      "ref": 3,
+      "name": "Landstra\u00dfe",
+      "name:de": NaN,
+      "population": 87953.0,
+      "area_km2": 7.406,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 3
+    },
+    {
+      "osm_id": 1991443,
+      "ref": 4,
+      "name": "Wieden",
+      "name:de": "Wieden",
+      "population": 29356.0,
+      "area_km2": 1.776,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 4
+    },
+    {
+      "osm_id": 1991440,
+      "ref": 5,
+      "name": "Margareten",
+      "name:de": "Margareten",
+      "population": 51434.0,
+      "area_km2": 2.012,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 5
+    },
+    {
+      "osm_id": 1990595,
+      "ref": 6,
+      "name": "Mariahilf",
+      "name:de": "Mariahilf",
+      "population": 28747.0,
+      "area_km2": 1.456,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 6
+    },
+    {
+      "osm_id": 1990597,
+      "ref": 7,
+      "name": "Neubau",
+      "name:de": "Neubau",
+      "population": 28823.0,
+      "area_km2": 1.608,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 7
+    },
+    {
+      "osm_id": 1990593,
+      "ref": 8,
+      "name": "Josefstadt",
+      "name:de": "Josefstadt",
+      "population": 23389.0,
+      "area_km2": 1.09,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 8
+    },
+    {
+      "osm_id": 1990590,
+      "ref": 9,
+      "name": "Alsergrund",
+      "name:de": "Alsergrund",
+      "population": 39322.0,
+      "area_km2": 2.967,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 9
+    },
+    {
+      "osm_id": 1991436,
+      "ref": 10,
+      "name": "Favoriten",
+      "name:de": NaN,
+      "population": 189543.0,
+      "area_km2": 31.822,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 10
+    },
+    {
+      "osm_id": 1991442,
+      "ref": 11,
+      "name": "Simmering",
+      "name:de": NaN,
+      "population": 95162.0,
+      "area_km2": 23.257,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 11
+    },
+    {
+      "osm_id": 1990596,
+      "ref": 12,
+      "name": "Meidling",
+      "name:de": NaN,
+      "population": NaN,
+      "area_km2": 8.102,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 12
+    },
+    {
+      "osm_id": 1990591,
+      "ref": 13,
+      "name": "Hietzing",
+      "name:de": NaN,
+      "population": NaN,
+      "area_km2": 37.711,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 13
+    },
+    {
+      "osm_id": 1990598,
+      "ref": 14,
+      "name": "Penzing",
+      "name:de": NaN,
+      "population": 89184.0,
+      "area_km2": 33.76,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 14
+    },
+    {
+      "osm_id": 1990599,
+      "ref": 15,
+      "name": "Rudolfsheim-F\u00fcnfhaus",
+      "name:de": NaN,
+      "population": 69078.0,
+      "area_km2": 3.918,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 15
+    },
+    {
+      "osm_id": 1991441,
+      "ref": 16,
+      "name": "Ottakring",
+      "name:de": NaN,
+      "population": 100520.0,
+      "area_km2": 8.672,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 16
+    },
+    {
+      "osm_id": 1991438,
+      "ref": 17,
+      "name": "Hernals",
+      "name:de": NaN,
+      "population": 50866.0,
+      "area_km2": 11.396,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 17
+    },
+    {
+      "osm_id": 1990600,
+      "ref": 18,
+      "name": "W\u00e4hring",
+      "name:de": NaN,
+      "population": 46622.0,
+      "area_km2": 6.347,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 18
+    },
+    {
+      "osm_id": 1991435,
+      "ref": 19,
+      "name": "D\u00f6bling",
+      "name:de": NaN,
+      "population": 66487.0,
+      "area_km2": 24.945,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 19
+    },
+    {
+      "osm_id": 1991433,
+      "ref": 20,
+      "name": "Brigittenau",
+      "name:de": NaN,
+      "population": 85380.0,
+      "area_km2": 5.712,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 20
+    },
+    {
+      "osm_id": 1991437,
+      "ref": 21,
+      "name": "Floridsdorf",
+      "name:de": NaN,
+      "population": 151740.0,
+      "area_km2": 44.439,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 21
+    },
+    {
+      "osm_id": 1991434,
+      "ref": 22,
+      "name": "Donaustadt",
+      "name:de": NaN,
+      "population": 144289.0,
+      "area_km2": 102.301,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 22
+    },
+    {
+      "osm_id": 1991439,
+      "ref": 23,
+      "name": "Liesing",
+      "name:de": NaN,
+      "population": 96728.0,
+      "area_km2": 32.065,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "enriched_distance_to_metro",
+          "type": "boolean",
+          "field": "enriched_distance_to_metro",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_schools",
+          "type": "boolean",
+          "field": "enriched_distance_to_schools",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        },
+        {
+          "name": "enriched_distance_to_parks",
+          "type": "boolean",
+          "field": "enriched_distance_to_parks",
+          "value": null,
+          "score": 0.0,
+          "weight": 1.0,
+          "weighted_score": 0.0
+        }
+      ],
+      "rank": 23
+    }
+  ],
+  "latency_s": 18.105433197999446
+}

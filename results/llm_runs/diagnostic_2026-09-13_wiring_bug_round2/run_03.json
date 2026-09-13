@@ -1,0 +1,179 @@
+{
+  "run_index": 3,
+  "generation_success": true,
+  "execution_success": false,
+  "degenerate_ranking": null,
+  "error": "execution: Node distance_to_metro failed: calculate_distances() got an unexpected keyword argument 'k'",
+  "query_spec": {
+    "raw_query": "Rank Vienna's 23 municipal districts by accessibility to metro, schools, and parks",
+    "goal": "rank_accessibility",
+    "entities": [
+      {
+        "ref": "sites",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      },
+      {
+        "ref": "metro",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      },
+      {
+        "ref": "schools",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      },
+      {
+        "ref": "parks",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      }
+    ],
+    "operations": [
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "sites"
+        },
+        "params": {},
+        "output": "sites_metric"
+      },
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "metro"
+        },
+        "params": {},
+        "output": "metro_metric"
+      },
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "schools"
+        },
+        "params": {},
+        "output": "schools_metric"
+      },
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "parks"
+        },
+        "params": {},
+        "output": "parks_metric"
+      },
+      {
+        "op": "distance_to",
+        "inputs": {
+          "vector": "sites_metric",
+          "target": "metro_metric"
+        },
+        "params": {
+          "k": 1,
+          "drop_unmatched": true
+        },
+        "output": "distance_to_metro"
+      },
+      {
+        "op": "distance_to",
+        "inputs": {
+          "vector": "sites_metric",
+          "target": "schools_metric"
+        },
+        "params": {
+          "k": 1,
+          "drop_unmatched": true
+        },
+        "output": "distance_to_schools"
+      },
+      {
+        "op": "distance_to",
+        "inputs": {
+          "vector": "sites_metric",
+          "target": "parks_metric"
+        },
+        "params": {
+          "k": 1,
+          "drop_unmatched": true
+        },
+        "output": "distance_to_parks"
+      },
+      {
+        "op": "score_features",
+        "inputs": {
+          "vector": "sites_metric"
+        },
+        "params": {
+          "scoring_spec": {
+            "factors": [
+              {
+                "field": "enriched_distance_to_metro",
+                "weight": 1
+              },
+              {
+                "field": "enriched_distance_to_schools",
+                "weight": 1
+              },
+              {
+                "field": "enriched_distance_to_parks",
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "output": "scored_sites"
+      },
+      {
+        "op": "rank_features",
+        "inputs": {
+          "vector": "scored_sites"
+        },
+        "params": {
+          "score_field": "score",
+          "rank_field": "rank"
+        },
+        "output": "ranked_sites"
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "vector",
+        "source": "ranked_sites",
+        "format": "json",
+        "config": {}
+      }
+    ],
+    "source": "llm",
+    "metadata": {
+      "language": "fa",
+      "assumptions": [],
+      "generated_by": "llm",
+      "normalization": {
+        "applied": true,
+        "repairs": [
+          "added score_field='score' to rank_features",
+          "added rank_field='rank' to rank_features",
+          "removed invalid enrich_feature_properties without rules and rewrote 'enriched_distance_to_metro' -> 'distance_to_metro'",
+          "removed invalid enrich_feature_properties without rules and rewrote 'enriched_distance_to_schools' -> 'distance_to_schools'",
+          "removed invalid enrich_feature_properties without rules and rewrote 'enriched_distance_to_parks' -> 'distance_to_parks'"
+        ]
+      }
+    }
+  },
+  "operation_sequence": [
+    "OperationSpec(op='crs_transform', inputs={'vector': 'sites'}, params={}, output='sites_metric')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'metro'}, params={}, output='metro_metric')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'schools'}, params={}, output='schools_metric')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'parks'}, params={}, output='parks_metric')",
+    "OperationSpec(op='distance_to', inputs={'vector': 'sites_metric', 'target': 'metro_metric'}, params={'k': 1, 'drop_unmatched': True}, output='distance_to_metro')",
+    "OperationSpec(op='distance_to', inputs={'vector': 'sites_metric', 'target': 'schools_metric'}, params={'k': 1, 'drop_unmatched': True}, output='distance_to_schools')",
+    "OperationSpec(op='distance_to', inputs={'vector': 'sites_metric', 'target': 'parks_metric'}, params={'k': 1, 'drop_unmatched': True}, output='distance_to_parks')",
+    "OperationSpec(op='score_features', inputs={'vector': 'sites_metric'}, params={'scoring_spec': {'factors': [{'field': 'enriched_distance_to_metro', 'weight': 1}, {'field': 'enriched_distance_to_schools', 'weight': 1}, {'field': 'enriched_distance_to_parks', 'weight': 1}]}}, output='scored_sites')",
+    "OperationSpec(op='rank_features', inputs={'vector': 'scored_sites'}, params={'score_field': 'score', 'rank_field': 'rank'}, output='ranked_sites')"
+  ],
+  "latency_s": 10.048251318999974
+}
