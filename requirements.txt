@@ -13,7 +13,7 @@
 #
 # Switch the line below to the plain PyPI pin once v0.2.0 is published, and
 # delete this note.
-smart-spatial-system[raster,pdf]==0.2.0
+smart-spatial-system[raster,pdf]==0.2.1
 
 # Notebook environment
 jupyterlab>=4.0
