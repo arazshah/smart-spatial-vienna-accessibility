@@ -51,8 +51,14 @@ justified in that notebook, not assumed here.
 
 ## Open decisions to revisit together
 
-- Whether to run the LLM arm at a single temperature or sweep it
-  (e.g. 0.1 vs 0.7) to show variance as a function of temperature.
 - N (number of repeated LLM runs) - 20 as a starting point, revisit once
   we see early variance and API cost.
 - Target journal/venue and its required format, once the advisor weighs in.
+
+## Resolved decisions
+
+- **Temperature (2026-09-12):** single temperature, 0.1 (not a sweep) -
+  matches `.env.example`'s default. Keeps phase 4 to one N-run experiment
+  rather than doubling API cost and the phase-5/6 analysis surface for a
+  first pass. A temperature sweep is still a reasonable follow-up once
+  the single-temperature results are in, not ruled out permanently.
