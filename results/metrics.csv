@@ -1,0 +1,3 @@
+arm,n_runs,par,weight_sd_metro,weight_sd_schools,weight_sd_parks,max_distance_sd_metro,max_distance_sd_schools,max_distance_sd_parks,rank_stability_mean,rank_stability_sd,rho_vs_rule_based_mean,rho_vs_rule_based_sd,success_rate,non_degenerate_rate,median_latency_s,latency_iqr_low_s,latency_iqr_high_s
+rule_based,5,1.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,0.0,1.0,1.0,,,
+llm,20,1.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,0.9989664079925414,0.0,1.0,1.0,20.010022875999994,18.779344695999953,21.697949764999976
