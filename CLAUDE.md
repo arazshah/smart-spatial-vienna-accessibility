@@ -23,33 +23,43 @@ it was deliberately designed, not improvised.
 
 ## Current state
 
-**Phases 1-3 are done and verified. Phase 4 has now had TWO consecutive
-full N=20 runs (2026-09-12, 2026-09-13) come back completely DEGENERATE
-(every score 0.0, same root cause both times) — a much more concrete hint
-just went in, NOT YET RE-RUN.** Both degenerate batches are preserved,
-don't touch either folder: `results/llm_runs/diagnostic_2026-09-12_wiring_bug/`
-and `results/llm_runs/diagnostic_2026-09-13_wiring_bug_round2/`.
-`results/llm_runs/run_*.json` (the live location) isn't real phase-4 data
-until a run comes back with `degenerate_ranking: False`. Full history in
-the project doc `claude/phase-4-llm-arm.md`. Check `paper/PLAN.md`'s phase
-table to confirm before assuming, this file will not be updated every
-session.
+**Phases 1-3 are done and verified. Phase 4 has now had THREE consecutive
+full N=20 runs (2026-09-12, 2026-09-13 x2) come back completely
+DEGENERATE — three DIFFERENT root causes in a row. The first two are
+fixed and CONFIRMED working (upstream `smart_spatial_system` 0.2.2
+correctly chains distance ops now). The third (a CRS-mismatch bug) is
+fixed locally, NOT YET RE-RUN.** All three degenerate batches are
+preserved, don't touch any of them:
+`results/llm_runs/diagnostic_2026-09-12_wiring_bug/`,
+`diagnostic_2026-09-13_wiring_bug_round2/`, and
+`diagnostic_2026-09-13_crs_mismatch_round3/`. `results/llm_runs/run_*.json`
+(the live location) still holds the Round-3 CRS-mismatch batch and isn't
+real phase-4 data until a run comes back with `degenerate_ranking: False`.
+Full history in the project doc `claude/phase-4-llm-arm.md`. Check
+`paper/PLAN.md`'s phase table to confirm before assuming, this file will
+not be updated every session.
 
 **Short version:** after two `smart_spatial_system` package bugs got fixed
 upstream (0.2.1) and a local `extract_ranking()` bug got fixed here (both
-2026-09-12, see `claude/phase-4-llm-arm.md`), the full N=20 loop finally
-ran clean (`execution_success: True`, 20/20) — but every run's
-`score_features` was wired to the *pre-distance* sites vector, never to
-any actual distance computation, so every score came out 0.0. Added a
-generic "chain your operations, don't re-use the original vector" hint and
-re-ran (2026-09-13): **still degenerate, 20/20 again** — the generic
-phrasing didn't work, the LLM still never chained. Replaced it with a
-concrete hint grounded directly in this repo's own confirmed-working
-`results/rule_based_query_spec.json` (phase 3's actual spec): compute
-distance 1 from the base sites vector, then compute distance 2 from
-*distance 1's output* (not the base vector again), and so on, feeding only
-the FINAL chained result to `score_features` — plus always set the
-distance-computing operation's output-field-naming parameter explicitly.
+2026-09-12), the full N=20 loop ran clean (`execution_success: True`,
+20/20) but every run's `score_features` was wired to the *pre-distance*
+sites vector, never to any actual distance computation — every score came
+out 0.0. A generic hint didn't fix it (re-ran 2026-09-13, still 20/20
+degenerate); a concrete hint grounded in
+`results/rule_based_query_spec.json` was added as a local safety net, AND
+the user (who maintains `smart_spatial_system` themselves) fixed the real
+root cause upstream, releasing `0.2.2` (worked chaining example + a new
+validation check — `claude/smart-spatial-system-upstream-bugs.md` Bug 4).
+**Re-ran under 0.2.2: chaining is now CONFIRMED correct in all 20/20 runs
+— Bug 4 is genuinely fixed.** But that same batch was STILL 20/20
+degenerate, for a third reason: every plan's `crs_transform` reprojected
+`'sites'` but never `'metro'`/`'schools'`/`'parks'`, so `spatial_nearest`
+silently computed a nonsensical, nearly-constant "distance" dominated by
+the CRS mismatch instead of erroring (documented as upstream candidate Bug
+5). Fixed locally: `SYSTEM_HINTS` requirement (5) now explicitly requires
+reprojecting all four layers individually, same grounding technique as
+before. **Next step: run the smoke-test cells before trusting a fourth
+full N=20 batch.**
 
 **A `ranking_is_degenerate()` check now runs automatically** in both the
 smoke test and the full loop (`degenerate_ranking` column in
@@ -57,10 +67,11 @@ smoke test and the full loop (`degenerate_ranking` column in
 mode can never again hide behind a clean "100% success rate."
 
 **When resuming this phase: run ONLY the smoke-test cells (2, 6, 8, 9)
-first** — two rounds have now each spent a full N=20 (~19 API calls) on
-this same wiring mistake, which a 1-call smoke test would have caught for
-1/20th the cost. Check the printed operation sequence actually chains and
-no degenerate-ranking warning fires before running the full
+first** — three rounds have now each spent a full N=20 (~19 API calls) on
+a mistake a 1-call smoke test would have caught for 1/20th the cost. Check
+the printed operation sequence actually chains, that every layer used in a
+distance call was individually reprojected, and that no degenerate-ranking
+warning fires before running the full
 `N_RUNS=20` loop again.
 
 As of the last update to this file (2026-09-12): `data/raw/` has the four

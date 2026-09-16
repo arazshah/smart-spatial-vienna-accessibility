@@ -1,0 +1,1346 @@
+{
+  "run_index": 8,
+  "generation_success": true,
+  "execution_success": true,
+  "degenerate_ranking": true,
+  "error": null,
+  "query_spec": {
+    "raw_query": "Rank Vienna's 23 municipal districts by accessibility to metro, schools, and parks",
+    "goal": "rank_accessibility",
+    "entities": [
+      {
+        "ref": "sites",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      },
+      {
+        "ref": "metro",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      },
+      {
+        "ref": "schools",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      },
+      {
+        "ref": "parks",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      }
+    ],
+    "operations": [
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "sites"
+        },
+        "params": {
+          "target_crs": "EPSG:31256"
+        },
+        "output": "sites_metric"
+      },
+      {
+        "op": "spatial_nearest",
+        "inputs": {
+          "source": "sites_metric",
+          "target": "metro"
+        },
+        "params": {
+          "distance_field": "distance_to_metro"
+        },
+        "output": "sites_with_metro"
+      },
+      {
+        "op": "spatial_nearest",
+        "inputs": {
+          "source": "sites_with_metro",
+          "target": "schools"
+        },
+        "params": {
+          "distance_field": "distance_to_schools"
+        },
+        "output": "sites_with_schools"
+      },
+      {
+        "op": "spatial_nearest",
+        "inputs": {
+          "source": "sites_with_schools",
+          "target": "parks"
+        },
+        "params": {
+          "distance_field": "distance_to_parks"
+        },
+        "output": "sites_with_parks"
+      },
+      {
+        "op": "score_features",
+        "inputs": {
+          "vector": "sites_with_parks"
+        },
+        "params": {
+          "scoring_spec": {
+            "factors": [
+              {
+                "field": "distance_to_metro",
+                "weight": -1
+              },
+              {
+                "field": "distance_to_schools",
+                "weight": -1
+              },
+              {
+                "field": "distance_to_parks",
+                "weight": -1
+              }
+            ]
+          }
+        },
+        "output": "scored_sites"
+      },
+      {
+        "op": "rank_features",
+        "inputs": {
+          "vector": "scored_sites"
+        },
+        "params": {
+          "score_field": "score",
+          "rank_field": "rank"
+        },
+        "output": "ranked_sites"
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "vector",
+        "source": "ranked_sites",
+        "format": "json",
+        "config": {}
+      }
+    ],
+    "source": "llm",
+    "metadata": {
+      "language": "fa",
+      "assumptions": [],
+      "generated_by": "llm",
+      "normalization": {
+        "applied": true,
+        "repairs": [
+          "added score_field='score' to rank_features",
+          "added rank_field='rank' to rank_features"
+        ]
+      }
+    }
+  },
+  "operation_sequence": [
+    "OperationSpec(op='crs_transform', inputs={'vector': 'sites'}, params={'target_crs': 'EPSG:31256'}, output='sites_metric')",
+    "OperationSpec(op='spatial_nearest', inputs={'source': 'sites_metric', 'target': 'metro'}, params={'distance_field': 'distance_to_metro'}, output='sites_with_metro')",
+    "OperationSpec(op='spatial_nearest', inputs={'source': 'sites_with_metro', 'target': 'schools'}, params={'distance_field': 'distance_to_schools'}, output='sites_with_schools')",
+    "OperationSpec(op='spatial_nearest', inputs={'source': 'sites_with_schools', 'target': 'parks'}, params={'distance_field': 'distance_to_parks'}, output='sites_with_parks')",
+    "OperationSpec(op='score_features', inputs={'vector': 'sites_with_parks'}, params={'scoring_spec': {'factors': [{'field': 'distance_to_metro', 'weight': -1}, {'field': 'distance_to_schools', 'weight': -1}, {'field': 'distance_to_parks', 'weight': -1}]}}, output='scored_sites')",
+    "OperationSpec(op='rank_features', inputs={'vector': 'scored_sites'}, params={'score_field': 'score', 'rank_field': 'rank'}, output='ranked_sites')"
+  ],
+  "ranking": [
+    {
+      "osm_id": 1990592,
+      "ref": 1,
+      "name": "Innere Stadt",
+      "name:de": NaN,
+      "population": 17135.0,
+      "area_km2": 2.868,
+      "distance_to_metro": 340085.604008,
+      "_neighbor_rank": 1,
+      "_source_index": 0,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 340085.585132,
+      "distance_to_parks": 340085.579224,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 340085.604008,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 340085.585132,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 340085.579224,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 1
+    },
+    {
+      "osm_id": 1990594,
+      "ref": 2,
+      "name": "Leopoldstadt",
+      "name:de": NaN,
+      "population": NaN,
+      "area_km2": 19.235,
+      "distance_to_metro": 336477.209921,
+      "_neighbor_rank": 1,
+      "_source_index": 1,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 336477.192872,
+      "distance_to_parks": 336477.186323,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 336477.209921,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 336477.192872,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 336477.186323,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 2
+    },
+    {
+      "osm_id": 1991416,
+      "ref": 3,
+      "name": "Landstra\u00dfe",
+      "name:de": NaN,
+      "population": 87953.0,
+      "area_km2": 7.406,
+      "distance_to_metro": 337426.641145,
+      "_neighbor_rank": 1,
+      "_source_index": 2,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 337426.622709,
+      "distance_to_parks": 337426.616646,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 337426.641145,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 337426.622709,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 337426.616646,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 3
+    },
+    {
+      "osm_id": 1991443,
+      "ref": 4,
+      "name": "Wieden",
+      "name:de": "Wieden",
+      "population": 29356.0,
+      "area_km2": 1.776,
+      "distance_to_metro": 338342.560267,
+      "_neighbor_rank": 1,
+      "_source_index": 3,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 338342.541434,
+      "distance_to_parks": 338342.535511,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 338342.560267,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 338342.541434,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 338342.535511,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 4
+    },
+    {
+      "osm_id": 1991440,
+      "ref": 5,
+      "name": "Margareten",
+      "name:de": "Margareten",
+      "population": 51434.0,
+      "area_km2": 2.012,
+      "distance_to_metro": 337820.633644,
+      "_neighbor_rank": 1,
+      "_source_index": 4,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 337820.614545,
+      "distance_to_parks": 337820.608716,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 337820.633644,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 337820.614545,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 337820.608716,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 5
+    },
+    {
+      "osm_id": 1990595,
+      "ref": 6,
+      "name": "Mariahilf",
+      "name:de": "Mariahilf",
+      "population": 28747.0,
+      "area_km2": 1.456,
+      "distance_to_metro": 338829.692064,
+      "_neighbor_rank": 1,
+      "_source_index": 5,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 338829.672815,
+      "distance_to_parks": 338829.667039,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 338829.692064,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 338829.672815,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 338829.667039,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 6
+    },
+    {
+      "osm_id": 1990597,
+      "ref": 7,
+      "name": "Neubau",
+      "name:de": "Neubau",
+      "population": 28823.0,
+      "area_km2": 1.608,
+      "distance_to_metro": 339670.276181,
+      "_neighbor_rank": 1,
+      "_source_index": 6,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 339670.256935,
+      "distance_to_parks": 339670.251159,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 339670.276181,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 339670.256935,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 339670.251159,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 7
+    },
+    {
+      "osm_id": 1990593,
+      "ref": 8,
+      "name": "Josefstadt",
+      "name:de": "Josefstadt",
+      "population": 23389.0,
+      "area_km2": 1.09,
+      "distance_to_metro": 340834.246925,
+      "_neighbor_rank": 1,
+      "_source_index": 7,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 340834.227848,
+      "distance_to_parks": 340834.222011,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 340834.246925,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 340834.227848,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 340834.222011,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 8
+    },
+    {
+      "osm_id": 1990590,
+      "ref": 9,
+      "name": "Alsergrund",
+      "name:de": "Alsergrund",
+      "population": 39322.0,
+      "area_km2": 2.967,
+      "distance_to_metro": 341671.30433,
+      "_neighbor_rank": 1,
+      "_source_index": 8,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 341671.285375,
+      "distance_to_parks": 341671.279496,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 341671.30433,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 341671.285375,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 341671.279496,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 9
+    },
+    {
+      "osm_id": 1991436,
+      "ref": 10,
+      "name": "Favoriten",
+      "name:de": NaN,
+      "population": 189543.0,
+      "area_km2": 31.822,
+      "distance_to_metro": 331051.15534,
+      "_neighbor_rank": 1,
+      "_source_index": 9,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 331051.137083,
+      "distance_to_parks": 331051.130957,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 331051.15534,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 331051.137083,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 331051.130957,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 10
+    },
+    {
+      "osm_id": 1991442,
+      "ref": 11,
+      "name": "Simmering",
+      "name:de": NaN,
+      "population": 95162.0,
+      "area_km2": 23.257,
+      "distance_to_metro": 333326.690225,
+      "_neighbor_rank": 1,
+      "_source_index": 10,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 333326.672357,
+      "distance_to_parks": 333326.666094,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 333326.690225,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 333326.672357,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 333326.666094,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 11
+    },
+    {
+      "osm_id": 1990596,
+      "ref": 12,
+      "name": "Meidling",
+      "name:de": NaN,
+      "population": NaN,
+      "area_km2": 8.102,
+      "distance_to_metro": 335170.40724,
+      "_neighbor_rank": 1,
+      "_source_index": 11,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 335170.387874,
+      "distance_to_parks": 335170.38214,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 335170.40724,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 335170.387874,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 335170.38214,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 12
+    },
+    {
+      "osm_id": 1990591,
+      "ref": 13,
+      "name": "Hietzing",
+      "name:de": NaN,
+      "population": NaN,
+      "area_km2": 37.711,
+      "distance_to_metro": 334601.312035,
+      "_neighbor_rank": 1,
+      "_source_index": 12,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 334601.291258,
+      "distance_to_parks": 334601.286029,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 334601.312035,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 334601.291258,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 334601.286029,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 13
+    },
+    {
+      "osm_id": 1990598,
+      "ref": 14,
+      "name": "Penzing",
+      "name:de": NaN,
+      "population": 89184.0,
+      "area_km2": 33.76,
+      "distance_to_metro": 338706.582484,
+      "_neighbor_rank": 1,
+      "_source_index": 13,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 338706.562891,
+      "distance_to_parks": 338706.557238,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 338706.582484,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 338706.562891,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 338706.557238,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 14
+    },
+    {
+      "osm_id": 1990599,
+      "ref": 15,
+      "name": "Rudolfsheim-F\u00fcnfhaus",
+      "name:de": NaN,
+      "population": 69078.0,
+      "area_km2": 3.918,
+      "distance_to_metro": 338319.47944,
+      "_neighbor_rank": 1,
+      "_source_index": 14,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 338319.460047,
+      "distance_to_parks": 338319.454323,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 338319.47944,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 338319.460047,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 338319.454323,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 15
+    },
+    {
+      "osm_id": 1991441,
+      "ref": 16,
+      "name": "Ottakring",
+      "name:de": NaN,
+      "population": 100520.0,
+      "area_km2": 8.672,
+      "distance_to_metro": 340451.646066,
+      "_neighbor_rank": 1,
+      "_source_index": 15,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 340451.626426,
+      "distance_to_parks": 340451.62079,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 340451.646066,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 340451.626426,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 340451.62079,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 16
+    },
+    {
+      "osm_id": 1991438,
+      "ref": 17,
+      "name": "Hernals",
+      "name:de": NaN,
+      "population": 50866.0,
+      "area_km2": 11.396,
+      "distance_to_metro": 341479.436794,
+      "_neighbor_rank": 1,
+      "_source_index": 16,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 341479.417548,
+      "distance_to_parks": 341479.411772,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 341479.436794,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 341479.417548,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 341479.411772,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 17
+    },
+    {
+      "osm_id": 1990600,
+      "ref": 18,
+      "name": "W\u00e4hring",
+      "name:de": NaN,
+      "population": 46622.0,
+      "area_km2": 6.347,
+      "distance_to_metro": 342047.185769,
+      "_neighbor_rank": 1,
+      "_source_index": 17,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 342047.16656,
+      "distance_to_parks": 342047.16077,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 342047.185769,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 342047.16656,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 342047.16077,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 18
+    },
+    {
+      "osm_id": 1991435,
+      "ref": 19,
+      "name": "D\u00f6bling",
+      "name:de": NaN,
+      "population": 66487.0,
+      "area_km2": 24.945,
+      "distance_to_metro": 343680.59058,
+      "_neighbor_rank": 1,
+      "_source_index": 18,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 343680.571542,
+      "distance_to_parks": 343680.565691,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 343680.59058,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 343680.571542,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 343680.565691,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 19
+    },
+    {
+      "osm_id": 1991433,
+      "ref": 20,
+      "name": "Brigittenau",
+      "name:de": NaN,
+      "population": 85380.0,
+      "area_km2": 5.712,
+      "distance_to_metro": 342930.82903,
+      "_neighbor_rank": 1,
+      "_source_index": 19,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 342930.81017,
+      "distance_to_parks": 342930.804257,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 342930.82903,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 342930.81017,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 342930.804257,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 20
+    },
+    {
+      "osm_id": 1991437,
+      "ref": 21,
+      "name": "Floridsdorf",
+      "name:de": NaN,
+      "population": 151740.0,
+      "area_km2": 44.439,
+      "distance_to_metro": 344206.861163,
+      "_neighbor_rank": 1,
+      "_source_index": 20,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 344206.842723,
+      "distance_to_parks": 344206.836661,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 344206.861163,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 344206.842723,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 344206.836661,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 21
+    },
+    {
+      "osm_id": 1991434,
+      "ref": 22,
+      "name": "Donaustadt",
+      "name:de": NaN,
+      "population": 144289.0,
+      "area_km2": 102.301,
+      "distance_to_metro": 333446.864436,
+      "_neighbor_rank": 1,
+      "_source_index": 21,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 333446.848568,
+      "distance_to_parks": 333446.841609,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 333446.864436,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 333446.848568,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 333446.841609,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 22
+    },
+    {
+      "osm_id": 1991439,
+      "ref": 23,
+      "name": "Liesing",
+      "name:de": NaN,
+      "population": 96728.0,
+      "area_km2": 32.065,
+      "distance_to_metro": 331175.235646,
+      "_neighbor_rank": 1,
+      "_source_index": 22,
+      "_target_index": 273,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 32202261,
+        "name": "Karl Brunner Park",
+        "area_m2": 1942.1
+      },
+      "distance_to_schools": 331175.216012,
+      "distance_to_parks": 331175.210373,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 331175.235646,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 331175.216012,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 331175.210373,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        }
+      ],
+      "rank": 23
+    }
+  ],
+  "latency_s": 19.797771821000026
+}

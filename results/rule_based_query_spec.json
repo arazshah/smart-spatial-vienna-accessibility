@@ -1,0 +1,42 @@
+{
+  "raw_query": "Rank Vienna's 23 municipal districts by accessibility to metro, schools, and parks",
+  "target_crs": "EPSG:31256",
+  "amenities": [
+    {
+      "ref": "metro",
+      "distance_field": "distance_to_metro_m",
+      "max_distance_m": 800.0,
+      "weight": 3.0,
+      "label": "Metro (U-Bahn) station"
+    },
+    {
+      "ref": "schools",
+      "distance_field": "distance_to_school_m",
+      "max_distance_m": 1000.0,
+      "weight": 2.0,
+      "label": "School"
+    },
+    {
+      "ref": "parks",
+      "distance_field": "distance_to_park_m",
+      "max_distance_m": 1500.0,
+      "weight": 1.0,
+      "label": "Park"
+    }
+  ],
+  "operation_sequence": [
+    "OperationSpec(op='crs_transform', inputs={'vector': 'sites'}, params={'source_crs': 'EPSG:4326', 'target_crs': 'EPSG:31256'}, output='sites_metric')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'metro'}, params={'source_crs': 'EPSG:4326', 'target_crs': 'EPSG:31256'}, output='metro_metric')",
+    "OperationSpec(op='nearest_neighbor', inputs={'source': 'sites_metric', 'target': 'metro_metric'}, params={'k': 1, 'distance_field': 'distance_to_metro_m'}, output='sites_with_metro')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'schools'}, params={'source_crs': 'EPSG:4326', 'target_crs': 'EPSG:31256'}, output='schools_metric')",
+    "OperationSpec(op='nearest_neighbor', inputs={'source': 'sites_with_metro', 'target': 'schools_metric'}, params={'k': 1, 'distance_field': 'distance_to_school_m'}, output='sites_with_schools')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'parks'}, params={'source_crs': 'EPSG:4326', 'target_crs': 'EPSG:31256'}, output='parks_metric')",
+    "OperationSpec(op='nearest_neighbor', inputs={'source': 'sites_with_schools', 'target': 'parks_metric'}, params={'k': 1, 'distance_field': 'distance_to_park_m'}, output='sites_with_parks')",
+    "OperationSpec(op='score_features', inputs={'vector': 'sites_with_parks'}, params={'factors': [{'name': 'metro', 'field': 'distance_to_metro_m', 'type': 'inverse_distance', 'max_distance_m': 800.0, 'weight': 3.0}, {'name': 'schools', 'field': 'distance_to_school_m', 'type': 'inverse_distance', 'max_distance_m': 1000.0, 'weight': 2.0}, {'name': 'parks', 'field': 'distance_to_park_m', 'type': 'inverse_distance', 'max_distance_m': 1500.0, 'weight': 1.0}], 'output_field': 'accessibility_score', 'normalize_weights': True}, output='sites_scored')",
+    "OperationSpec(op='rank_features', inputs={'vector': 'sites_scored'}, params={'score_field': 'accessibility_score', 'rank_field': 'rank', 'descending': True}, output='sites_ranked')",
+    "OperationSpec(op='build_report', inputs={'vector': 'sites_ranked'}, params={'score_field': 'accessibility_score', 'rank_field': 'rank', 'name_field': 'name', 'report_spec': {'title': 'Accessibility Analysis Report', 'language': 'en', 'map_layers': [{'source': 'sites_ranked', 'kind': 'choropleth', 'label': 'Ranked sites', 'visible': True, 'style': {'color_field': 'accessibility_score', 'radius': 10}}], 'tables': [{'source': 'sites_ranked', 'columns': [{'field': 'rank', 'label': 'Rank', 'format': '', 'align': 'center', 'width': 60}, {'field': 'name', 'label': 'Name', 'format': '', 'align': 'left', 'width': 0}, {'field': 'accessibility_score', 'label': 'Accessibility score', 'format': '.1f', 'align': 'center', 'width': 100}, {'field': 'distance_to_metro_m', 'label': 'Metro (U-Bahn) station', 'format': '.0f', 'align': 'center', 'width': 0}, {'field': 'distance_to_school_m', 'label': 'School', 'format': '.0f', 'align': 'center', 'width': 0}, {'field': 'distance_to_park_m', 'label': 'Park', 'format': '.0f', 'align': 'center', 'width': 0}], 'sort_by': 'rank', 'sort_order': 'asc', 'max_rows': 50, 'title': 'Site accessibility ranking'}], 'summary': {'source': 'sites_ranked', 'stats': ['total_count', 'top_score', 'avg_score', 'top_name'], 'template': '', 'language': 'en'}, 'format': 'pdf', 'config': {}}}, output='sites_report')"
+  ],
+  "par": 1.0,
+  "rank_stability": 1.0,
+  "n_runs_checked": 5
+}

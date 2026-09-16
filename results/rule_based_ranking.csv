@@ -1,0 +1,24 @@
+rank,name,accessibility_score,distance_to_metro_m,distance_to_school_m,distance_to_park_m
+1,Innere Stadt,100.0,0.0,0.0,0.0
+2,Leopoldstadt,100.0,0.0,0.0,0.0
+3,Landstraße,100.0,0.0,0.0,0.0
+4,Wieden,100.0,0.0,0.0,0.0
+5,Margareten,100.0,0.0,0.0,0.0
+6,Mariahilf,100.0,0.0,0.0,0.0
+7,Neubau,100.0,0.0,0.0,0.0
+8,Josefstadt,100.0,0.0,0.0,0.0
+9,Alsergrund,100.0,0.0,0.0,0.0
+10,Favoriten,100.0,0.0,0.0,0.0
+11,Simmering,100.0,0.0,0.0,0.0
+12,Meidling,100.0,0.0,0.0,0.0
+13,Hietzing,100.0,0.0,0.0,0.0
+14,Penzing,100.0,0.0,0.0,0.0
+15,Rudolfsheim-Fünfhaus,100.0,0.0,0.0,0.0
+16,Ottakring,100.0,0.0,0.0,0.0
+17,Döbling,100.0,0.0,0.0,0.0
+18,Brigittenau,100.0,0.0,0.0,0.0
+19,Floridsdorf,100.0,0.0,0.0,0.0
+20,Donaustadt,100.0,0.0,0.0,0.0
+21,Liesing,100.0,0.0,0.0,0.0
+22,Währing,99.2,13.0,0.0,0.0
+23,Hernals,99.2,14.0,0.0,0.0

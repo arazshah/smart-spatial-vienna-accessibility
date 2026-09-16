@@ -3,17 +3,26 @@
 # deliberately (and re-run the affected notebooks) - never loosen it to
 # ">=" for day-to-day work.
 #
-# NOTE (2026-09-12): 0.2.0 is merged to smart_spatial_system's main branch
-# but not yet tagged/published to PyPI - PyPI still serves 0.1.0, which
-# predates the crs_transform fix this case study depends on (see
-# smart_spatial_system's CHANGELOG.md). Until the v0.2.0 tag is pushed and
-# the PyPI publish workflow runs, install directly from the tagged commit:
+# NOTE (2026-09-13): not yet published to PyPI - install directly from the
+# tagged commit until it is:
 #
-#   pip install "smart-spatial-system[raster,pdf] @ git+https://github.com/arazshah/smart_spatial_system.git@<commit-or-tag>"
+#   pip install "smart-spatial-system[raster,pdf] @ git+https://github.com/arazshah/smart_spatial_system.git@v0.2.2"
 #
-# Switch the line below to the plain PyPI pin once v0.2.0 is published, and
-# delete this note.
-smart-spatial-system[raster,pdf]==0.2.1
+# Switch the line below to the plain PyPI pin once a tagged release is
+# published, and delete this note.
+#
+# 0.2.2 (2026-09-13) fixes the exact bug phase 4 hit twice in this repo
+# (two full N=20 batches, both all-degenerate/score=0.0): the LLM prompt
+# never taught chaining multiple operations' outputs together before
+# score_features, and validation never caught a scorer wired to a stale
+# pre-distance vector. Per smart_spatial_system's own CHANGELOG.md,
+# `_domain_guidance()` now has a worked "wrong fan-out vs. correct chained"
+# example plus `join_feature_properties` guidance, and a new
+# `_validate_score_features_field_chaining()` check raises
+# LLMSpecGenerationError instead of silently producing an all-zero ranking.
+# See claude/smart-spatial-system-upstream-bugs.md (Bug 4) and
+# claude/phase-4-llm-arm.md for the full diagnosis this fix responds to.
+smart-spatial-system[raster,pdf]==0.2.3
 
 # Notebook environment
 jupyterlab>=4.0

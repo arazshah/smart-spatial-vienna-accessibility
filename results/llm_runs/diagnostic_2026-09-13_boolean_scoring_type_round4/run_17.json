@@ -1,0 +1,1377 @@
+{
+  "run_index": 17,
+  "generation_success": true,
+  "execution_success": true,
+  "degenerate_ranking": true,
+  "error": null,
+  "query_spec": {
+    "raw_query": "Rank Vienna's 23 municipal districts by accessibility to metro, schools, and parks",
+    "goal": "rank_accessibility",
+    "entities": [
+      {
+        "ref": "sites",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      },
+      {
+        "ref": "metro",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      },
+      {
+        "ref": "schools",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      },
+      {
+        "ref": "parks",
+        "kind": "vector",
+        "binding": {},
+        "hints": {}
+      }
+    ],
+    "operations": [
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "sites"
+        },
+        "params": {
+          "target_crs": "EPSG:31256"
+        },
+        "output": "sites_metric"
+      },
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "metro"
+        },
+        "params": {
+          "target_crs": "EPSG:31256"
+        },
+        "output": "metro_metric"
+      },
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "schools"
+        },
+        "params": {
+          "target_crs": "EPSG:31256"
+        },
+        "output": "schools_metric"
+      },
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "parks"
+        },
+        "params": {
+          "target_crs": "EPSG:31256"
+        },
+        "output": "parks_metric"
+      },
+      {
+        "op": "spatial_nearest",
+        "inputs": {
+          "source": "sites_metric",
+          "target": "metro_metric"
+        },
+        "params": {
+          "distance_field": "distance_to_metro"
+        },
+        "output": "sites_with_metro"
+      },
+      {
+        "op": "spatial_nearest",
+        "inputs": {
+          "source": "sites_with_metro",
+          "target": "schools_metric"
+        },
+        "params": {
+          "distance_field": "distance_to_schools"
+        },
+        "output": "sites_with_schools"
+      },
+      {
+        "op": "spatial_nearest",
+        "inputs": {
+          "source": "sites_with_schools",
+          "target": "parks_metric"
+        },
+        "params": {
+          "distance_field": "distance_to_parks"
+        },
+        "output": "sites_with_parks"
+      },
+      {
+        "op": "score_features",
+        "inputs": {
+          "vector": "sites_with_parks"
+        },
+        "params": {
+          "factors": [
+            {
+              "field": "distance_to_metro",
+              "weight": -1
+            },
+            {
+              "field": "distance_to_schools",
+              "weight": -1
+            },
+            {
+              "field": "distance_to_parks",
+              "weight": -1
+            }
+          ]
+        },
+        "output": "scored_sites"
+      },
+      {
+        "op": "rank_features",
+        "inputs": {
+          "vector": "scored_sites"
+        },
+        "params": {
+          "score_field": "score",
+          "rank_field": "rank"
+        },
+        "output": "ranked_sites"
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "vector",
+        "source": "ranked_sites",
+        "format": "json",
+        "config": {}
+      }
+    ],
+    "source": "llm",
+    "metadata": {
+      "language": "fa",
+      "assumptions": [],
+      "generated_by": "llm",
+      "normalization": {
+        "applied": true,
+        "repairs": [
+          "added score_field='score' to rank_features",
+          "added rank_field='rank' to rank_features"
+        ]
+      }
+    }
+  },
+  "operation_sequence": [
+    "OperationSpec(op='crs_transform', inputs={'vector': 'sites'}, params={'target_crs': 'EPSG:31256'}, output='sites_metric')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'metro'}, params={'target_crs': 'EPSG:31256'}, output='metro_metric')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'schools'}, params={'target_crs': 'EPSG:31256'}, output='schools_metric')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'parks'}, params={'target_crs': 'EPSG:31256'}, output='parks_metric')",
+    "OperationSpec(op='spatial_nearest', inputs={'source': 'sites_metric', 'target': 'metro_metric'}, params={'distance_field': 'distance_to_metro'}, output='sites_with_metro')",
+    "OperationSpec(op='spatial_nearest', inputs={'source': 'sites_with_metro', 'target': 'schools_metric'}, params={'distance_field': 'distance_to_schools'}, output='sites_with_schools')",
+    "OperationSpec(op='spatial_nearest', inputs={'source': 'sites_with_schools', 'target': 'parks_metric'}, params={'distance_field': 'distance_to_parks'}, output='sites_with_parks')",
+    "OperationSpec(op='score_features', inputs={'vector': 'sites_with_parks'}, params={'factors': [{'field': 'distance_to_metro', 'weight': -1}, {'field': 'distance_to_schools', 'weight': -1}, {'field': 'distance_to_parks', 'weight': -1}]}, output='scored_sites')",
+    "OperationSpec(op='rank_features', inputs={'vector': 'scored_sites'}, params={'score_field': 'score', 'rank_field': 'rank'}, output='ranked_sites')"
+  ],
+  "ranking": [
+    {
+      "osm_id": 1990592,
+      "ref": 1,
+      "name": "Innere Stadt",
+      "name:de": NaN,
+      "population": 17135.0,
+      "area_km2": 2.868,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 0,
+      "_target_index": 6,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 8063768,
+        "name": "Volksgarten",
+        "area_m2": 50860.5
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 1
+    },
+    {
+      "osm_id": 1990594,
+      "ref": 2,
+      "name": "Leopoldstadt",
+      "name:de": NaN,
+      "population": NaN,
+      "area_km2": 19.235,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 1,
+      "_target_index": 3,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 8044066,
+        "name": "Augarten",
+        "area_m2": 461825.6
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 2
+    },
+    {
+      "osm_id": 1991416,
+      "ref": 3,
+      "name": "Landstra\u00dfe",
+      "name:de": NaN,
+      "population": 87953.0,
+      "area_km2": 7.406,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 2,
+      "_target_index": 9,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 8092215,
+        "name": "Schweizergarten",
+        "area_m2": 139023.8
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 3
+    },
+    {
+      "osm_id": 1991443,
+      "ref": 4,
+      "name": "Wieden",
+      "name:de": "Wieden",
+      "population": 29356.0,
+      "area_km2": 1.776,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 3,
+      "_target_index": 1,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 5848378,
+        "name": "Alois-Drasche-Park",
+        "area_m2": 16357.5
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 4
+    },
+    {
+      "osm_id": 1991440,
+      "ref": 5,
+      "name": "Margareten",
+      "name:de": "Margareten",
+      "population": 51434.0,
+      "area_km2": 2.012,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 4,
+      "_target_index": 0,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 5848376,
+        "name": "Bruno-Kreisky-Park",
+        "area_m2": 10651.3
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 5
+    },
+    {
+      "osm_id": 1990595,
+      "ref": 6,
+      "name": "Mariahilf",
+      "name:de": "Mariahilf",
+      "population": 28747.0,
+      "area_km2": 1.456,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 5,
+      "_target_index": 15,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 8876752,
+        "name": "Alfred-Gr\u00fcnwald-Park",
+        "area_m2": 8843.6
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 6
+    },
+    {
+      "osm_id": 1990597,
+      "ref": 7,
+      "name": "Neubau",
+      "name:de": "Neubau",
+      "population": 28823.0,
+      "area_km2": 1.608,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 6,
+      "_target_index": 11,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 8095126,
+        "name": "Josef-Strau\u00df-Park",
+        "area_m2": 7941.3
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 7
+    },
+    {
+      "osm_id": 1990593,
+      "ref": 8,
+      "name": "Josefstadt",
+      "name:de": "Josefstadt",
+      "population": 23389.0,
+      "area_km2": 1.09,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 7,
+      "_target_index": 13,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 8104136,
+        "name": "Lore-Segal-Park",
+        "area_m2": 5954.7
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 8
+    },
+    {
+      "osm_id": 1990590,
+      "ref": 9,
+      "name": "Alsergrund",
+      "name:de": "Alsergrund",
+      "population": 39322.0,
+      "area_km2": 2.967,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 8,
+      "_target_index": 5,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 8063758,
+        "name": "Sigmund-Freud-Park",
+        "area_m2": 13942.3
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 9
+    },
+    {
+      "osm_id": 1991436,
+      "ref": 10,
+      "name": "Favoriten",
+      "name:de": NaN,
+      "population": 189543.0,
+      "area_km2": 31.822,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 9,
+      "_target_index": 2,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 6419415,
+        "name": "Waldm\u00fcllerpark",
+        "area_m2": 38451.8
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 10
+    },
+    {
+      "osm_id": 1991442,
+      "ref": 11,
+      "name": "Simmering",
+      "name:de": NaN,
+      "population": 95162.0,
+      "area_km2": 23.257,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 10,
+      "_target_index": 179,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 27958868,
+        "name": "Herderpark",
+        "area_m2": 48385.0
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 11
+    },
+    {
+      "osm_id": 1990596,
+      "ref": 12,
+      "name": "Meidling",
+      "name:de": NaN,
+      "population": NaN,
+      "area_km2": 8.102,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 11,
+      "_target_index": 44,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 23558724,
+        "name": "Parkanlage Haebergasse",
+        "area_m2": 1410.9
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 12
+    },
+    {
+      "osm_id": 1990591,
+      "ref": 13,
+      "name": "Hietzing",
+      "name:de": NaN,
+      "population": NaN,
+      "area_km2": 37.711,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 12,
+      "_target_index": 51,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 24410666,
+        "name": "Streckerpark",
+        "area_m2": 5489.7
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 13
+    },
+    {
+      "osm_id": 1990598,
+      "ref": 14,
+      "name": "Penzing",
+      "name:de": NaN,
+      "population": 89184.0,
+      "area_km2": 33.76,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 13,
+      "_target_index": 4,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 8061155,
+        "name": "Klara-Weingarten-Park",
+        "area_m2": 1208.0
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 14
+    },
+    {
+      "osm_id": 1990599,
+      "ref": 15,
+      "name": "Rudolfsheim-F\u00fcnfhaus",
+      "name:de": NaN,
+      "population": 69078.0,
+      "area_km2": 3.918,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 14,
+      "_target_index": 55,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 24867728,
+        "name": "M\u00e4rzpark",
+        "area_m2": 15439.2
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 15
+    },
+    {
+      "osm_id": 1991441,
+      "ref": 16,
+      "name": "Ottakring",
+      "name:de": NaN,
+      "population": 100520.0,
+      "area_km2": 8.672,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 15,
+      "_target_index": 34,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 13709389,
+        "name": "Kongresspark",
+        "area_m2": 54412.0
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 16
+    },
+    {
+      "osm_id": 1991438,
+      "ref": 17,
+      "name": "Hernals",
+      "name:de": NaN,
+      "population": 50866.0,
+      "area_km2": 11.396,
+      "distance_to_metro": 13.515967,
+      "_neighbor_rank": 1,
+      "_source_index": 16,
+      "_target_index": 47,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 24019128,
+        "name": "Diepoldpark",
+        "area_m2": 3743.7
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 13.515967,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 17
+    },
+    {
+      "osm_id": 1990600,
+      "ref": 18,
+      "name": "W\u00e4hring",
+      "name:de": NaN,
+      "population": 46622.0,
+      "area_km2": 6.347,
+      "distance_to_metro": 12.665708,
+      "_neighbor_rank": 1,
+      "_source_index": 17,
+      "_target_index": 14,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 8106026,
+        "name": "W\u00e4hringer Park",
+        "area_m2": 67031.1
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 12.665708,
+          "score": 1.0,
+          "weight": -1.0,
+          "weighted_score": -1.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 18
+    },
+    {
+      "osm_id": 1991435,
+      "ref": 19,
+      "name": "D\u00f6bling",
+      "name:de": NaN,
+      "population": 66487.0,
+      "area_km2": 24.945,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 18,
+      "_target_index": 37,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 20422005,
+        "name": "Linn\u00e9park",
+        "area_m2": 5807.6
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 19
+    },
+    {
+      "osm_id": 1991433,
+      "ref": 20,
+      "name": "Brigittenau",
+      "name:de": NaN,
+      "population": 85380.0,
+      "area_km2": 5.712,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 19,
+      "_target_index": 10,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 8092399,
+        "name": "Allerheiligenpark",
+        "area_m2": 21435.5
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 20
+    },
+    {
+      "osm_id": 1991437,
+      "ref": 21,
+      "name": "Floridsdorf",
+      "name:de": NaN,
+      "population": 151740.0,
+      "area_km2": 44.439,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 20,
+      "_target_index": 17,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 10120373,
+        "name": null,
+        "area_m2": 9723.1
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 21
+    },
+    {
+      "osm_id": 1991434,
+      "ref": 22,
+      "name": "Donaustadt",
+      "name:de": NaN,
+      "population": 144289.0,
+      "area_km2": 102.301,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 21,
+      "_target_index": 45,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 23698026,
+        "name": "Ingeborg-Bachmann-Park",
+        "area_m2": 10818.1
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 22
+    },
+    {
+      "osm_id": 1991439,
+      "ref": 23,
+      "name": "Liesing",
+      "name:de": NaN,
+      "population": 96728.0,
+      "area_km2": 32.065,
+      "distance_to_metro": 0.0,
+      "_neighbor_rank": 1,
+      "_source_index": 22,
+      "_target_index": 71,
+      "_nearest_status": "matched",
+      "_nearest_engine": "shapely",
+      "_target_properties": {
+        "osm_id": 25761983,
+        "name": "\u00d6lzeltpark",
+        "area_m2": 10310.1
+      },
+      "distance_to_schools": 0.0,
+      "distance_to_parks": 0.0,
+      "score": 0.0,
+      "__score_details__": [
+        {
+          "name": "distance_to_metro",
+          "type": "boolean",
+          "field": "distance_to_metro",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_schools",
+          "type": "boolean",
+          "field": "distance_to_schools",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        },
+        {
+          "name": "distance_to_parks",
+          "type": "boolean",
+          "field": "distance_to_parks",
+          "value": 0.0,
+          "score": 0.0,
+          "weight": -1.0,
+          "weighted_score": -0.0
+        }
+      ],
+      "rank": 23
+    }
+  ],
+  "latency_s": 20.57929944099942
+}

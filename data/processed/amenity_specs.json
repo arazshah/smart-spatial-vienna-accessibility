@@ -1,0 +1,23 @@
+[
+  {
+    "ref": "metro",
+    "distance_field": "distance_to_metro_m",
+    "max_distance_m": 800.0,
+    "weight": 3.0,
+    "label": "Metro (U-Bahn) station"
+  },
+  {
+    "ref": "schools",
+    "distance_field": "distance_to_school_m",
+    "max_distance_m": 1000.0,
+    "weight": 2.0,
+    "label": "School"
+  },
+  {
+    "ref": "parks",
+    "distance_field": "distance_to_park_m",
+    "max_distance_m": 1500.0,
+    "weight": 1.0,
+    "label": "Park"
+  }
+]
