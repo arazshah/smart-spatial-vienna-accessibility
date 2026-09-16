@@ -62,3 +62,28 @@ justified in that notebook, not assumed here.
   rather than doubling API cost and the phase-5/6 analysis surface for a
   first pass. A temperature sweep is still a reasonable follow-up once
   the single-temperature results are in, not ruled out permanently.
+
+## Findings to fold into the paper's discussion/limitations section
+
+- **The rule-based ranking ties 21 of 23 districts at
+  `accessibility_score = 100.0`.** Checked (2026-09-16) whether this was
+  a bug in `smart_spatial_system`'s distance calculation rather than a
+  real result: read `plugins/nearest_neighbor.py` and
+  `plugins/distance_calculator.py` directly (both the shapely path and
+  the pure-python fallback correctly return `0.0` when a point lies
+  inside a polygon - standard GIS behaviour, not a shortcut), then wrote
+  an independent point-in-polygon check from scratch (no shared code with
+  the library under test - see `scripts/verify_zero_distances.py`) and
+  ran it directly against `data/processed/*.geojson`. Result: every one
+  of the 23 districts contains at least 4 schools and at least 9 parks
+  (211 schools / 1063 parks averaging ~9 and ~46 per district), so
+  `distance_to_school_m`/`distance_to_park_m` are genuinely `0.0`
+  everywhere; exactly 2 districts (Waehring, Hernals) contain zero of the
+  109 metro stations, matching `results/rule_based_ranking.csv`'s only
+  two non-tied rows exactly. **Not a bug** - a real consequence of
+  Vienna's amenity density - but worth a sentence in the discussion: a
+  centroid- or population-weighted distance (rather than polygon-to-point
+  "0 if any instance falls inside the boundary") would differentiate the
+  top of the ranking more than this framing does, and this ceiling effect
+  should be named explicitly rather than left for a reader to wonder
+  about. See `claude/phase-3-rule-based-arm.md` for the fuller writeup.
