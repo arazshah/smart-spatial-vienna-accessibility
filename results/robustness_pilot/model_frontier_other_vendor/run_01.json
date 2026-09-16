@@ -1,0 +1,230 @@
+{
+  "condition_type": "model",
+  "condition_label": "model_frontier_other_vendor",
+  "model_id": "qwen3.8-2.4t-a95b",
+  "prompt_label": "base",
+  "run_index": 1,
+  "generation_success": true,
+  "execution_success": false,
+  "degenerate_ranking": null,
+  "error": "execution: Node scored_sites failed: score_features() got an unexpected keyword argument 'score_field'",
+  "query_spec": {
+    "raw_query": "Rank Vienna's 23 municipal districts by accessibility to metro, schools, and parks",
+    "goal": "rank_district_accessibility",
+    "entities": [
+      {
+        "ref": "sites",
+        "kind": "vector",
+        "binding": {
+          "layer": "sites"
+        },
+        "hints": {
+          "description": "Vienna municipal districts to rank",
+          "geometry_hint": "Point/Polygon"
+        }
+      },
+      {
+        "ref": "metro",
+        "kind": "vector",
+        "binding": {
+          "layer": "metro"
+        },
+        "hints": {
+          "description": "U-Bahn station locations",
+          "geometry_hint": "Point"
+        }
+      },
+      {
+        "ref": "schools",
+        "kind": "vector",
+        "binding": {
+          "layer": "schools"
+        },
+        "hints": {
+          "description": "School locations",
+          "geometry_hint": "Point"
+        }
+      },
+      {
+        "ref": "parks",
+        "kind": "vector",
+        "binding": {
+          "layer": "parks"
+        },
+        "hints": {
+          "description": "Park locations as centroids",
+          "geometry_hint": "Point"
+        }
+      }
+    ],
+    "operations": [
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "sites"
+        },
+        "params": {
+          "target_crs": "EPSG:31256"
+        },
+        "output": "sites_metric"
+      },
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "metro"
+        },
+        "params": {
+          "target_crs": "EPSG:31256"
+        },
+        "output": "metro_metric"
+      },
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "schools"
+        },
+        "params": {
+          "target_crs": "EPSG:31256"
+        },
+        "output": "schools_metric"
+      },
+      {
+        "op": "crs_transform",
+        "inputs": {
+          "vector": "parks"
+        },
+        "params": {
+          "target_crs": "EPSG:31256"
+        },
+        "output": "parks_metric"
+      },
+      {
+        "op": "spatial_nearest",
+        "inputs": {
+          "source": "sites_metric",
+          "target": "metro_metric"
+        },
+        "params": {
+          "source_crs": "EPSG:31256",
+          "target_crs": "EPSG:31256",
+          "distance_field": "distance_to_metro"
+        },
+        "output": "sites_with_metro_distance"
+      },
+      {
+        "op": "spatial_nearest",
+        "inputs": {
+          "source": "sites_with_metro_distance",
+          "target": "schools_metric"
+        },
+        "params": {
+          "source_crs": "EPSG:31256",
+          "target_crs": "EPSG:31256",
+          "distance_field": "distance_to_schools"
+        },
+        "output": "sites_with_schools_distance"
+      },
+      {
+        "op": "spatial_nearest",
+        "inputs": {
+          "source": "sites_with_schools_distance",
+          "target": "parks_metric"
+        },
+        "params": {
+          "source_crs": "EPSG:31256",
+          "target_crs": "EPSG:31256",
+          "distance_field": "distance_to_parks"
+        },
+        "output": "sites_with_accessibility_distances"
+      },
+      {
+        "op": "score_features",
+        "inputs": {
+          "vector": "sites_with_accessibility_distances"
+        },
+        "params": {
+          "score_field": "accessibility_score",
+          "scoring_spec": {
+            "method": "weighted_sum",
+            "normalize": true,
+            "factors": [
+              {
+                "name": "near_metro",
+                "field": "distance_to_metro",
+                "type": "inverse_distance",
+                "max_distance_m": 1500,
+                "weight": 1
+              },
+              {
+                "name": "near_schools",
+                "field": "distance_to_schools",
+                "type": "inverse_distance",
+                "max_distance_m": 2000,
+                "weight": 1
+              },
+              {
+                "name": "near_parks",
+                "field": "distance_to_parks",
+                "type": "inverse_distance",
+                "max_distance_m": 3000,
+                "weight": 1
+              }
+            ]
+          }
+        },
+        "output": "scored_sites"
+      },
+      {
+        "op": "rank_features",
+        "inputs": {
+          "vector": "scored_sites"
+        },
+        "params": {
+          "score_field": "accessibility_score",
+          "rank_field": "rank",
+          "ascending": false
+        },
+        "output": "ranked_sites"
+      }
+    ],
+    "outputs": [
+      {
+        "kind": "vector",
+        "source": "ranked_sites",
+        "format": "geojson",
+        "config": {
+          "fields": [
+            "rank",
+            "accessibility_score",
+            "distance_to_metro",
+            "distance_to_schools",
+            "distance_to_parks"
+          ]
+        }
+      }
+    ],
+    "source": "llm",
+    "metadata": {
+      "language": "en",
+      "assumptions": [
+        "All input layers are reprojected to EPSG:31256 before distance computation.",
+        "Accessibility is modeled as inverse distance to the nearest metro station, school, and park.",
+        "Metro, schools, and parks are weighted equally.",
+        "Distances at or beyond the selected max_distance_m thresholds contribute zero to that factor."
+      ],
+      "generated_by": "llm"
+    }
+  },
+  "operation_sequence": [
+    "OperationSpec(op='crs_transform', inputs={'vector': 'sites'}, params={'target_crs': 'EPSG:31256'}, output='sites_metric')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'metro'}, params={'target_crs': 'EPSG:31256'}, output='metro_metric')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'schools'}, params={'target_crs': 'EPSG:31256'}, output='schools_metric')",
+    "OperationSpec(op='crs_transform', inputs={'vector': 'parks'}, params={'target_crs': 'EPSG:31256'}, output='parks_metric')",
+    "OperationSpec(op='spatial_nearest', inputs={'source': 'sites_metric', 'target': 'metro_metric'}, params={'source_crs': 'EPSG:31256', 'target_crs': 'EPSG:31256', 'distance_field': 'distance_to_metro'}, output='sites_with_metro_distance')",
+    "OperationSpec(op='spatial_nearest', inputs={'source': 'sites_with_metro_distance', 'target': 'schools_metric'}, params={'source_crs': 'EPSG:31256', 'target_crs': 'EPSG:31256', 'distance_field': 'distance_to_schools'}, output='sites_with_schools_distance')",
+    "OperationSpec(op='spatial_nearest', inputs={'source': 'sites_with_schools_distance', 'target': 'parks_metric'}, params={'source_crs': 'EPSG:31256', 'target_crs': 'EPSG:31256', 'distance_field': 'distance_to_parks'}, output='sites_with_accessibility_distances')",
+    "OperationSpec(op='score_features', inputs={'vector': 'sites_with_accessibility_distances'}, params={'score_field': 'accessibility_score', 'scoring_spec': {'method': 'weighted_sum', 'normalize': True, 'factors': [{'name': 'near_metro', 'field': 'distance_to_metro', 'type': 'inverse_distance', 'max_distance_m': 1500, 'weight': 1}, {'name': 'near_schools', 'field': 'distance_to_schools', 'type': 'inverse_distance', 'max_distance_m': 2000, 'weight': 1}, {'name': 'near_parks', 'field': 'distance_to_parks', 'type': 'inverse_distance', 'max_distance_m': 3000, 'weight': 1}]}}, output='scored_sites')",
+    "OperationSpec(op='rank_features', inputs={'vector': 'scored_sites'}, params={'score_field': 'accessibility_score', 'rank_field': 'rank', 'ascending': False}, output='ranked_sites')"
+  ],
+  "latency_s": 67.56471077300012
+}

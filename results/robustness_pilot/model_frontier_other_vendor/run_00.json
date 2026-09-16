@@ -1,0 +1,12 @@
+{
+  "condition_type": "model",
+  "condition_label": "model_frontier_other_vendor",
+  "model_id": "qwen3.8-2.4t-a95b",
+  "prompt_label": "base",
+  "run_index": 0,
+  "generation_success": false,
+  "execution_success": false,
+  "degenerate_ranking": null,
+  "error": "generation: TimeoutError: The read operation timed out",
+  "latency_s": 60.19386317200042
+}

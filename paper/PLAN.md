@@ -22,9 +22,53 @@ rule-based planner that is deterministic by construction? See
 | 3 | Rule-based arm | `notebooks/02_rule_based_arm.ipynb` | no | no |
 | 4 | LLM arm (N repeated runs) | `notebooks/03_llm_arm.ipynb`, `results/llm_runs/` | yes | **yes** |
 | 5 | Comparison metric computation | `notebooks/04_comparison_metric.ipynb`, `results/metrics.csv` — **DONE (2026-09-16)** | no | no |
-| 6 | Results and figures | `notebooks/05_results.ipynb`, `results/figures/` — **DONE (2026-09-16)** | no | no |
-| 7 | Paper writing | `paper/paper.md` (or LaTeX) | no | no |
+| 6 | Results and figures | `notebooks/05_results.ipynb`, `results/figures/` | no | no |
+| 7 | Paper writing | `paper/paper.md` — **full draft delivered (2026-09-16)**, ready for the advisor meeting; still open to revision after feedback | no | no |
 | 8 | Final reproducibility check + release | tag, Zenodo DOI | no | no |
+| 9 | Robustness pilot: alternative models + prompt phrasings | `notebooks/06_robustness_pilot.ipynb`, `results/robustness_pilot/` — **DONE, closed (2026-09-16)**: 7/9 conditions clean (PAR=1.0, RS=1.0, ρ=0.998966, N=5 each) across `gpt-4o`, `grok-3-mini-fast-beta`, `grok-3-fast`, and all 4 prompt paraphrases, once a second harness gap (`rank_features`' real parameter is `rank_field`, not `ranking_field`) was found and closed with a new `EXTENDED_SYSTEM_HINTS`; 2/9 (`model_weak_legacy`, `model_frontier_other_vendor`) remain blocked after three rounds of model-id substitution — accepted as a final, named limitation rather than left open, since no further AvalAI ids are available to try | yes | **yes** |
+
+Phase 9 is a small, separate follow-up requested after the phase 7 draft:
+does perfect reliability (PAR=1.0, Rank Stability=1.0 at N=20) generalize
+beyond the one model and one exact phrasing phase 4 tested, or is it an
+artifact of both being held fixed? Two axes, N=5 pilot each (escalate to
+N=20 only where the pilot shows any deviation): (A) 5 alternative models
+via AvalAI, same question, same schema-safety `SYSTEM_HINTS`; (B) 4
+paraphrases of the same question, same model as phase 4. See
+`claude/phase-9-robustness-pilot.md` for the full design rationale, the
+literature motivating it, and the final real-run numbers.
+
+**Outcome (2026-09-16), folded into `paper/paper.md` §5.5/§6.1/§7.4/§8:**
+once the `rank_field` harness gap was fixed, reliability held perfectly
+(PAR=1.0, RS=1.0, ρ=0.998966) across every condition that actually
+produced a plan — `gpt-4o` (same vendor as phase 4), two Grok models
+reached through a different vendor, and all four prompt paraphrasings
+(including a second, independent harness gap in the `formal`/`distractor`
+phrasings, where the planner inserted an unwanted PDF-report step — also
+fixed via the same extended hints). Two gaps remain, both accepted as
+final rather than left open: (1) neither attempt to include a genuinely
+small/open-weight model succeeded — every id tried for that slot was
+either dead on AvalAI or, when it worked, turned out to be another
+capable commercial model (Grok), not small/open-weight; (2) the
+"frontier model, other vendor" slot's substitute (`qwen3.8-2.4t-a95b`)
+surfaced a *third*, independent harness-completeness bug on its 2/5
+successful generations — it applied `rank_features`' `score_field`
+parameter to `score_features`, which doesn't accept it — a fresh,
+model-specific confusion opened by the very hint fix that made `gpt-4o`
+reliable. Both are named explicitly as limitations in the paper rather
+than glossed over; a third round of user-supplied model-id substitutions
+(2026-09-16) did not resolve either, and the user decided not to pursue
+further substitutions, so the pilot is closed with 7/9 conditions clean.
+
+**Data-integrity fix (2026-09-16):** the third (partial/interrupted) run
+also exposed a real notebook bug — the manifest/metrics cells built their
+tables from the current kernel session's in-memory records only, so
+re-running the loop for just the two still-broken conditions silently
+overwrote the other six conditions' correct results in `metrics_pilot.csv`
+with blanks, even though their `run_*.json` files were untouched on disk.
+Recomputed both files directly from every condition's on-disk `run_*.json`
+(independently, not trusting the corrupted CSV) and confirmed the 7 clean
+conditions' numbers were unaffected; patched the notebook's manifest/metrics
+cells to always read from disk going forward.
 
 Phases 2, 3, 5, 6 can run entirely offline once `data/processed/` and
 `results/llm_runs/` exist, using only the pinned `smart-spatial-system`

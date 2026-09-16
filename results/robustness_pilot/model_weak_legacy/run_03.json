@@ -1,0 +1,12 @@
+{
+  "condition_type": "model",
+  "condition_label": "model_weak_legacy",
+  "model_id": "qwen3-235b-a22b-fp8-tput",
+  "prompt_label": "base",
+  "run_index": 3,
+  "generation_success": false,
+  "execution_success": false,
+  "degenerate_ranking": null,
+  "error": "generation: LLMSpecGenerationError: LLM HTTP error 400: {\n  \"error\": {\n    \"message\": \"Invalid request. Please check your request parameters Please contact support at support@avalai.ir and include the request ID 01a0ab20-7276-7cc3-9c86-51081a9b5499 in your email if you believe this is an error.\",\n    \"type\": \"invalid_request\",\n    \"param\": null,\n    \"code\": \"invalid_request\",\n    \"request_id\": \"01a0ab20-7276-7cc3-9c86-51081a9b5499\"\n  }\n}",
+  "latency_s": 3.46052857199993
+}

@@ -1,0 +1,86 @@
+condition_type,condition_label,model_id,prompt_label,run_index,generation_success,execution_success,degenerate_ranking,latency_s,n_operations,error,structural_deviation
+model,model_frontier_same_vendor,gpt-4o,base,0,True,True,False,16.896868210999855,9,,
+model,model_frontier_same_vendor,gpt-4o,base,1,True,True,False,15.546104285000183,9,,
+model,model_frontier_same_vendor,gpt-4o,base,2,True,True,False,16.52530580599978,9,,
+model,model_frontier_same_vendor,gpt-4o,base,3,True,True,False,16.28720202400018,9,,
+model,model_frontier_same_vendor,gpt-4o,base,4,True,True,False,17.350251896999907,9,,
+model,model_weak_legacy,qwen3-235b-a22b-fp8-tput,base,0,False,False,,4.242125772999316,0,"generation: LLMSpecGenerationError: LLM HTTP error 400: {
+  ""error"": {
+    ""message"": ""Invalid request. Please check your request parameters Please contact support at support@avalai.ir and include the request ID 01a0ab20-4514-76b2-9f4f-de5faab5f18e in your email if you believe this is an error."",
+    ""type"": ""invalid_request"",
+    ""param"": null,
+    ""code"": ""invalid_request"",
+    ""request_id"": ""01a0ab20-4514-76b2-9f4f-de5faab5f18e""
+  }
+}",
+model,model_weak_legacy,qwen3-235b-a22b-fp8-tput,base,1,False,False,,4.0952961640005014,0,"generation: LLMSpecGenerationError: LLM HTTP error 400: {
+  ""error"": {
+    ""message"": ""Invalid request. Please check your request parameters Please contact support at support@avalai.ir and include the request ID 01a0ab20-5592-7dc3-9cfd-fd3d1e19fe99 in your email if you believe this is an error."",
+    ""type"": ""invalid_request"",
+    ""param"": null,
+    ""code"": ""invalid_request"",
+    ""request_id"": ""01a0ab20-5592-7dc3-9cfd-fd3d1e19fe99""
+  }
+}",
+model,model_weak_legacy,qwen3-235b-a22b-fp8-tput,base,2,False,False,,3.2898345890007477,0,"generation: LLMSpecGenerationError: LLM HTTP error 400: {
+  ""error"": {
+    ""message"": ""Invalid request. Please check your request parameters Please contact support at support@avalai.ir and include the request ID 01a0ab20-6594-7c00-b904-c1e041e6ebb0 in your email if you believe this is an error."",
+    ""type"": ""invalid_request"",
+    ""param"": null,
+    ""code"": ""invalid_request"",
+    ""request_id"": ""01a0ab20-6594-7c00-b904-c1e041e6ebb0""
+  }
+}",
+model,model_weak_legacy,qwen3-235b-a22b-fp8-tput,base,3,False,False,,3.46052857199993,0,"generation: LLMSpecGenerationError: LLM HTTP error 400: {
+  ""error"": {
+    ""message"": ""Invalid request. Please check your request parameters Please contact support at support@avalai.ir and include the request ID 01a0ab20-7276-7cc3-9c86-51081a9b5499 in your email if you believe this is an error."",
+    ""type"": ""invalid_request"",
+    ""param"": null,
+    ""code"": ""invalid_request"",
+    ""request_id"": ""01a0ab20-7276-7cc3-9c86-51081a9b5499""
+  }
+}",
+model,model_weak_legacy,qwen3-235b-a22b-fp8-tput,base,4,False,False,,4.718218536000677,0,"generation: LLMSpecGenerationError: LLM HTTP error 400: {
+  ""error"": {
+    ""message"": ""Invalid request. Please check your request parameters Please contact support at support@avalai.ir and include the request ID 01a0ab20-7fff-7e92-9e4a-9d3fc430afeb in your email if you believe this is an error."",
+    ""type"": ""invalid_request"",
+    ""param"": null,
+    ""code"": ""invalid_request"",
+    ""request_id"": ""01a0ab20-7fff-7e92-9e4a-9d3fc430afeb""
+  }
+}",
+model,model_frontier_other_vendor,qwen3.8-2.4t-a95b,base,0,False,False,,60.19386317200042,0,generation: TimeoutError: The read operation timed out,
+model,model_frontier_other_vendor,qwen3.8-2.4t-a95b,base,1,True,False,,67.56471077300012,9,execution: Node scored_sites failed: score_features() got an unexpected keyword argument 'score_field',
+model,model_frontier_other_vendor,qwen3.8-2.4t-a95b,base,2,False,False,,60.21553775099983,0,generation: TimeoutError: The read operation timed out,
+model,model_frontier_other_vendor,qwen3.8-2.4t-a95b,base,3,True,False,,55.61965263100046,9,execution: Node ranked_districts failed: rank_features() got an unexpected keyword argument 'ascending',
+model,model_frontier_other_vendor,qwen3.8-2.4t-a95b,base,4,False,False,,60.19160793000037,0,generation: TimeoutError: The read operation timed out,
+model,model_midtier_other_vendor,grok-3-mini-fast-beta,base,0,True,True,False,18.930716820999805,9,,
+model,model_midtier_other_vendor,grok-3-mini-fast-beta,base,1,True,True,False,19.629467985000247,9,,
+model,model_midtier_other_vendor,grok-3-mini-fast-beta,base,2,True,True,False,21.176936061000106,9,,
+model,model_midtier_other_vendor,grok-3-mini-fast-beta,base,3,True,True,False,20.32273345199974,9,,
+model,model_midtier_other_vendor,grok-3-mini-fast-beta,base,4,True,True,False,19.215187353000147,9,,
+model,model_small_open_weight,grok-3-fast,base,0,True,True,False,19.270533780000278,9,,
+model,model_small_open_weight,grok-3-fast,base,1,True,True,False,19.871525113999724,9,,
+model,model_small_open_weight,grok-3-fast,base,2,True,True,False,20.08335863299999,9,,
+model,model_small_open_weight,grok-3-fast,base,3,True,True,False,19.343276529999912,9,,
+model,model_small_open_weight,grok-3-fast,base,4,True,True,False,19.209084830999927,9,,
+prompt,prompt_casual,,casual,0,True,True,False,37.58185711399983,9,,
+prompt,prompt_casual,,casual,1,True,True,False,23.533049388999643,9,,
+prompt,prompt_casual,,casual,2,True,True,False,26.816996274000303,9,,
+prompt,prompt_casual,,casual,3,True,True,False,24.800524336999842,9,,
+prompt,prompt_casual,,casual,4,True,True,False,23.96714267399966,9,,
+prompt,prompt_formal,,formal,0,True,True,False,24.275561399999788,9,,
+prompt,prompt_formal,,formal,1,True,True,False,33.4113761159997,9,,
+prompt,prompt_formal,,formal,2,True,True,False,25.70440412700009,9,,
+prompt,prompt_formal,,formal,3,True,True,False,25.190438646000075,9,,
+prompt,prompt_formal,,formal,4,True,True,False,26.464931063999757,9,,
+prompt,prompt_reordered,,reordered,0,True,True,False,23.58537355699991,9,,
+prompt,prompt_reordered,,reordered,1,True,True,False,34.36018445700029,9,,
+prompt,prompt_reordered,,reordered,2,True,True,False,24.06306109900015,9,,
+prompt,prompt_reordered,,reordered,3,True,True,False,25.202359416000036,9,,
+prompt,prompt_reordered,,reordered,4,True,True,False,24.295628003000274,9,,
+prompt,prompt_distractor,,distractor,0,True,True,False,23.632522006000727,9,,
+prompt,prompt_distractor,,distractor,1,True,True,False,24.080745525000566,9,,
+prompt,prompt_distractor,,distractor,2,True,True,False,24.142989406000197,9,,
+prompt,prompt_distractor,,distractor,3,True,True,False,23.79971716,9,,
+prompt,prompt_distractor,,distractor,4,True,True,False,24.09430359899943,9,,

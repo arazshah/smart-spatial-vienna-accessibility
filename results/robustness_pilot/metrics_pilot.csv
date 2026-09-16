@@ -1,0 +1,12 @@
+condition_label,n_runs,par,rank_stability_mean,rank_stability_sd,rho_vs_rule_based_mean,rho_vs_rule_based_sd,success_rate,non_degenerate_rate,median_latency_s
+model_frontier_same_vendor,5,1.0,1.0,0.0,0.9989664079925414,0.0,1.0,1.0,16.52530580599978
+model_weak_legacy,5,,,,,,0.0,0.0,4.0952961640005014
+model_frontier_other_vendor,5,1.0,,,,,0.0,0.0,60.19386317200042
+model_midtier_other_vendor,5,1.0,1.0,0.0,0.9989664079925414,0.0,1.0,1.0,19.629467985000247
+model_small_open_weight,5,1.0,1.0,0.0,0.9989664079925414,0.0,1.0,1.0,19.343276529999912
+prompt_casual,5,1.0,1.0,0.0,0.9989664079925414,0.0,1.0,1.0,24.800524336999842
+prompt_formal,5,1.0,1.0,0.0,0.9989664079925414,0.0,1.0,1.0,25.70440412700009
+prompt_reordered,5,1.0,1.0,0.0,0.9989664079925414,0.0,1.0,1.0,24.295628003000274
+prompt_distractor,5,1.0,1.0,0.0,0.9989664079925414,0.0,1.0,1.0,24.080745525000566
+"model_baseline (phase 4, N=20)",20,1.0,1.0,0.0,0.9989664079925414,0.0,1.0,1.0,20.010022875999994
+"prompt_base (phase 4, N=20)",20,1.0,1.0,0.0,0.9989664079925414,0.0,1.0,1.0,20.010022875999994
