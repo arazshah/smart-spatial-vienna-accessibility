@@ -22,7 +22,7 @@ rule-based planner that is deterministic by construction? See
 | 3 | Rule-based arm | `notebooks/02_rule_based_arm.ipynb` | no | no |
 | 4 | LLM arm (N repeated runs) | `notebooks/03_llm_arm.ipynb`, `results/llm_runs/` | yes | **yes** |
 | 5 | Comparison metric computation | `notebooks/04_comparison_metric.ipynb`, `results/metrics.csv` — **DONE (2026-09-16)** | no | no |
-| 6 | Results and figures | `notebooks/05_results.ipynb`, `results/figures/` | no | no |
+| 6 | Results and figures | `notebooks/05_results.ipynb`, `results/figures/` — **DONE (2026-09-16)** | no | no |
 | 7 | Paper writing | `paper/paper.md` (or LaTeX) | no | no |
 | 8 | Final reproducibility check + release | tag, Zenodo DOI | no | no |
 
