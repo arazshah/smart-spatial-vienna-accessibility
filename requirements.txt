@@ -22,7 +22,7 @@
 # LLMSpecGenerationError instead of silently producing an all-zero ranking.
 # See claude/smart-spatial-system-upstream-bugs.md (Bug 4) and
 # claude/phase-4-llm-arm.md for the full diagnosis this fix responds to.
-smart-spatial-system[raster,pdf]==0.2.3
+smart-spatial-system[raster,pdf]==0.2.4
 
 # Notebook environment
 jupyterlab>=4.0
